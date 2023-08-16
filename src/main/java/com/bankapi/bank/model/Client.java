@@ -3,17 +3,20 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_client")
 public class Client {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -36,9 +39,11 @@ public class Client {
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
-    
-    //Fazer relacionamento com Account (@OneToOne)
 
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    @JsonManagedReference
+    private Account account;
 
     public long getId() {
         return id;
@@ -103,5 +108,12 @@ public class Client {
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-    
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }

@@ -2,43 +2,62 @@ package com.bankapi.bank.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.bankapi.enums.Brand;
+import com.bankapi.bank.enums.Brand;
+import com.bankapi.bank.enums.Level;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_card")
 public class Card {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String name;
+
     private Brand brand;
 
-    private String level;
+    private Level level;
 
     //Fazer validações de bandeira
     @Size(min = 16, max = 16)
     private String cardNumber;
 
+    @NotNull
     private LocalDate expireDate;
 
+    @Size(min = 3, max = 3)
     private String cvv;
 
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
 
-    private boolean hasCreditAccess;
+    private boolean hasCreditAccess = false;
 
-    // TO DO [Fazer relacionamento com Account (OneToOne)]
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    @JsonManagedReference
+    private Account account;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("card")
+    private List<Report> report;
 
     public long getId() {
         return id;
@@ -46,6 +65,14 @@ public class Card {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Brand getBrand() {
@@ -56,11 +83,11 @@ public class Card {
         this.brand = brand;
     }
 
-    public String getLevel() {
+    public Level getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Level level) {
         this.level = level;
     }
 
@@ -110,5 +137,21 @@ public class Card {
 
     public void setHasCreditAccess(boolean hasCreditAccess) {
         this.hasCreditAccess = hasCreditAccess;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public List<Report> getReport() {
+        return report;
+    }
+
+    public void setReport(List<Report> report) {
+        this.report = report;
     }
 }
