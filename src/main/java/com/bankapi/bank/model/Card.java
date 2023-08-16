@@ -3,6 +3,8 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.bankapi.enums.Brand;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String brand;
+    private Brand brand;
 
     private String level;
 
@@ -46,11 +48,11 @@ public class Card {
         this.id = id;
     }
 
-    public String getBrand() {
+    public Brand getBrand() {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public void setBrand(Brand brand) {
         this.brand = brand;
     }
 

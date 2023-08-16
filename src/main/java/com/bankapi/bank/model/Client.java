@@ -36,6 +36,9 @@ public class Client {
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
+    
+    //Fazer relacionamento com Account (@OneToOne)
+
 
     public long getId() {
         return id;
@@ -100,8 +103,5 @@ public class Client {
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-    //Fazer relacionamento com Account (@OneToOne)
-
     
 }
