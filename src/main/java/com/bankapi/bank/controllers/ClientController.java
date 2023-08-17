@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.model.Client;
 import com.bankapi.bank.services.ClientService;
@@ -25,24 +25,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ClientController {
 
     @Autowired
-    private ClientService service;
+    private ClientService clientService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Client> findAllClients() {
-        return service.findAllClients();
+        return clientService.findAllClients();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Client createClient(@RequestBody Client client) {
-        return service.createClient(client);
+        return clientService.createClient(client);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteClient(Long id) {
-        service.deleteClient(id);
+    public void deleteClient(@PathVariable Long id) {
+        clientService.deleteClient(id);
     }
     
 }

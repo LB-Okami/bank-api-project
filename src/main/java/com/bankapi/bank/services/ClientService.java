@@ -42,7 +42,6 @@ public class ClientService {
     public void deleteClient(Long id) {
         Optional<Client> clientById = clientRepository.findById(id);
 
-
         if(!clientById.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
