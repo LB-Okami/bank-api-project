@@ -2,10 +2,12 @@ package com.bankapi.bank.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 import com.bankapi.bank.enums.Brand;
 import com.bankapi.bank.enums.Level;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -28,7 +30,7 @@ import lombok.Data;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -41,7 +43,7 @@ public class Card {
     private String cardNumber;
 
     @NotNull
-    private LocalDate expireDate;
+    private YearMonth expireDate;
 
     @Size(min = 3, max = 3)
     private String cvv;
@@ -59,5 +61,6 @@ public class Card {
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("card")
+    @JsonIgnore
     private List<Report> report;
 }

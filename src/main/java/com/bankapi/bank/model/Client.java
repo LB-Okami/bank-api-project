@@ -3,13 +3,14 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -21,11 +22,12 @@ import lombok.Data;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull
     private String name;
 
+    //fazer validação de cpf
     @NotNull
     private String cpf;
 
@@ -42,8 +44,8 @@ public class Client {
 
     private LocalDateTime lastUpdate;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
-    @JsonManagedReference
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @JsonBackReference
     private Account account;
 }
