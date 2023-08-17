@@ -32,6 +32,9 @@ public class Account {
     @NotNull
     private BigDecimal balance;
 
+    @NotNull
+    private BigDecimal debt;
+
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
