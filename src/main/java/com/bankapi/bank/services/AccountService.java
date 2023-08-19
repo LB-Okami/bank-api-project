@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.model.Account;
+import com.bankapi.bank.model.AccountDTO;
 import com.bankapi.bank.model.Client;
 import com.bankapi.bank.repositories.AccountRepository;
 
@@ -37,13 +38,15 @@ public class AccountService {
         return accountRepository.findById(id).get();
     }
 
-    public Account createAccount(Account account, Long clientId) {
+    public Account createAccount(AccountDTO accountDTO) {
+        Account account = new Account();
 
-        Client clientById = clientService.findClientById(clientId);
+        Client clientById = clientService.findClientById(accountDTO.getClientId());
 
-        account.setClient(clientById);
+        account.setBalance(accountDTO.getBalance());
         account.setCreationDate(LocalDate.now());
         account.setLastUpdate(LocalDateTime.now());
+        account.setClient(clientById);
 
         return accountRepository.save(account);
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankapi.bank.model.Account;
+import com.bankapi.bank.model.AccountDTO;
 import com.bankapi.bank.services.AccountService;
 
 @RestController
@@ -36,9 +37,9 @@ public class AccountController {
         return accountService.findAccountById(id);
     }
 
-    @PostMapping("/{clientId}")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createAccount(@RequestBody Account account, @PathVariable Long clientId) {
-        return accountService.createAccount(account, clientId);
+    public Account createAccount(@RequestBody AccountDTO accountDTO) {
+        return accountService.createAccount(accountDTO);
     }
 }
