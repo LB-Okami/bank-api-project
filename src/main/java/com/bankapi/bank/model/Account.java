@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -15,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -26,25 +27,18 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private BigDecimal creditLimit;
 
-    @NotNull
     private BigDecimal balance;
 
-    @NotNull
     private BigDecimal debt;
 
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("account")
-    private Card card;
-
-    @OneToOne
-    @JoinColumn(name = "client_id")
-    @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @JsonIgnore
     private Client client;
 }

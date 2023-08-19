@@ -3,10 +3,6 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,8 +40,6 @@ public class Client {
 
     private LocalDateTime lastUpdate;
 
-    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
-    @JsonIgnore
-    @JsonBackReference
+    @OneToOne(mappedBy = "client")
     private Account account;
 }

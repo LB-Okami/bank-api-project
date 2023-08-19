@@ -54,13 +54,12 @@ public class Card {
 
     private boolean hasCreditAccess = false;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
-    @JsonManagedReference
-    private Account account;
+    //@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "account_id")
+    //private Account account;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("card")
-    @JsonIgnore
-    private List<Report> report;
+    //@OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    //@JsonIgnoreProperties("card")
+    //@JsonIgnore
+    //private List<Report> report;
 }
