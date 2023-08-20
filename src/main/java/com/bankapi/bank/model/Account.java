@@ -37,7 +37,7 @@ public class Account {
 
     private LocalDateTime lastUpdate;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @JsonIgnore
     private Client client;

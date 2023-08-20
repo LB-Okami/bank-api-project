@@ -43,11 +43,31 @@ public class AccountService {
 
         Client clientById = clientService.findClientById(accountDTO.getClientId());
 
+        checkIfClientHasAccount(accountDTO.getClientId());
+
         account.setBalance(accountDTO.getBalance());
         account.setCreationDate(LocalDate.now());
         account.setLastUpdate(LocalDateTime.now());
         account.setClient(clientById);
 
         return accountRepository.save(account);
+    }
+
+    public void checkIfClientHasAccount(Long id) {
+        Client clientById = clientService.findClientById(id);
+
+        if(clientById.getAccount() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void deleteAccount(Long id) {
+        Optional<Account> accountById = accountRepository.findById(id);
+
+        if(!accountById.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        accountRepository.deleteById(id);
     }
 }

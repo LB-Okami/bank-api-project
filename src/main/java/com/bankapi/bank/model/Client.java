@@ -3,6 +3,7 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +41,6 @@ public class Client {
 
     private LocalDateTime lastUpdate;
 
-    @OneToOne(mappedBy = "client")
+    @OneToOne(mappedBy = "client", cascade = CascadeType.REMOVE)
     private Account account;
 }
