@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -31,8 +29,6 @@ public class Account {
 
     private BigDecimal balance;
 
-    private BigDecimal debt;
-
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;
@@ -41,4 +37,7 @@ public class Account {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @JsonIgnore
     private Client client;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.REMOVE)
+    private Card card;
 }

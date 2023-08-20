@@ -8,7 +8,9 @@ import lombok.Data;
 @Data
 public class AccountDTO {
     private BigDecimal creditLimit;
+
     private BigDecimal balance;
+    
     private BigDecimal debt;
     
     @NotNull

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.AccountDTO;
-import com.bankapi.bank.model.Client;
 import com.bankapi.bank.services.AccountService;
 
 @RestController

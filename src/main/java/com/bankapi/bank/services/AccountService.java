@@ -70,7 +70,6 @@ public class AccountService {
 
         account.setBalance(updatedAccountDTO.getBalance());
         account.setCreditLimit(updatedAccountDTO.getCreditLimit());
-        account.setDebt(updatedAccountDTO.getDebt());
         account.setClient(clientById);
 
         account.setCreationDate(accountDatabase.get().getCreationDate());
