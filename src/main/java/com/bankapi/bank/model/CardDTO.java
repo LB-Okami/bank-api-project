@@ -17,7 +17,9 @@ public class CardDTO {
 
     private Level level;
 
-    private BigDecimal bill;
+    private Double bill;
+
+    private Double value;
 
     private String cardNumber;
 

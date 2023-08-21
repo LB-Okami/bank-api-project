@@ -1,7 +1,5 @@
 package com.bankapi.bank.model;
 
-import java.math.BigDecimal;
-
 import com.bankapi.bank.enums.Operation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,7 +25,7 @@ public class Report {
     private Operation operation;
 
     @NotNull
-    private BigDecimal value;
+    private Double value;
 
     @ManyToOne
     @JoinColumn(name = "card_id")

@@ -1,10 +1,8 @@
 package com.bankapi.bank.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -25,9 +23,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal creditLimit;
+    private Double creditLimit;
 
-    private BigDecimal balance;
+    private Double balance;
 
     private LocalDate creationDate;
 

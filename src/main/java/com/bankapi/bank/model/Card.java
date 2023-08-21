@@ -1,6 +1,5 @@
 package com.bankapi.bank.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -35,7 +34,9 @@ public class Card {
 
     private Level level;
 
-    private BigDecimal bill;
+    private Double bill;
+
+    private Double value;
 
     //Fazer validações de bandeira
     @Size(min = 16, max = 16)

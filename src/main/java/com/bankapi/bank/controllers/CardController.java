@@ -57,6 +57,12 @@ public class CardController {
         return cardService.updateCard(updatedCardDTO, id);
     }
 
+    @PutMapping("/debit/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Card debitTransaction(@RequestBody CardDTO updatedCardDTO, @PathVariable Long id) {
+        return cardService.debitTransaction(updatedCardDTO, id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAccount(@PathVariable Long id) {

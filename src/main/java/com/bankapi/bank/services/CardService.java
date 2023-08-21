@@ -1,5 +1,6 @@
 package com.bankapi.bank.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -87,6 +88,46 @@ public class CardService {
         card.setLastUpdate(LocalDateTime.now());
 
         return cardRepository.save(card);
+    }
+
+    public Card debitTransaction(CardDTO updatedCardDTO, Long id) {
+        Optional<Card> cardDatabase = cardRepository.findById(id);
+
+        Account accountById = accountService.findAccountById(updatedCardDTO.getAccountId());
+
+
+        if(!cardDatabase.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
+            checkIfAccountHasCard(updatedCardDTO.getAccountId());
+        }
+
+        debitTransactionFormula(cardDatabase.get().getAccount().getBalance(), updatedCardDTO.getValue());
+
+        Card card = cardDatabase.get();
+        
+        card.setName(updatedCardDTO.getName());
+        card.setBrand(updatedCardDTO.getBrand());
+        card.setLevel(updatedCardDTO.getLevel());
+        card.setBill(updatedCardDTO.getBill());
+        card.setCardNumber(updatedCardDTO.getCardNumber());
+        card.setExpireDate(updatedCardDTO.getExpireDate());
+        card.setCvv(updatedCardDTO.getCvv());
+        card.setAccount(accountById);
+
+        card.setCreationDate(cardDatabase.get().getCreationDate());
+        card.setLastUpdate(LocalDateTime.now());
+
+        return cardRepository.save(card);
+    }
+
+    public Double debitTransactionFormula(Double balance, Double value) {
+        if(value <= 0 || value > balance) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return balance - value;
     }
 
     public Card grantOrRemoveCreditAcess(CardDTO updatedCardDTO, Long id) {
