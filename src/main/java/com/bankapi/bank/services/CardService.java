@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.model.Account;
-import com.bankapi.bank.model.AccountDTO;
 import com.bankapi.bank.model.Card;
 import com.bankapi.bank.model.CardDTO;
-import com.bankapi.bank.model.Client;
 import com.bankapi.bank.repositories.CardRepository;
 
 @Service
@@ -27,6 +25,16 @@ public class CardService {
 
     public List<Card> findAllCards() {
         return cardRepository.findAll();
+    }
+
+    public Card findCardById(Long id) {
+        Optional<Card> cardById = cardRepository.findById(id);
+
+        if(!cardById.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return cardRepository.findById(id).get();
     }
 
     public Card createCard(CardDTO cardDTO) {
@@ -77,6 +85,30 @@ public class CardService {
 
         card.setCreationDate(cardDatabase.get().getCreationDate());
         card.setLastUpdate(LocalDateTime.now());
+
+        return cardRepository.save(card);
+    }
+
+    public Card grantOrRemoveCreditAcess(CardDTO updatedCardDTO, Long id) {
+        Optional<Card> cardDatabase = cardRepository.findById(id);
+
+        if(!cardDatabase.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        else if(updatedCardDTO.getName() != null && updatedCardDTO.getName().equals(cardDatabase.get().getName()) || 
+                updatedCardDTO.getBrand() != null && !updatedCardDTO.getBrand().equals(cardDatabase.get().getBrand()) ||
+                updatedCardDTO.getLevel() != null && !updatedCardDTO.getBrand().equals(cardDatabase.get().getBrand()) ||
+                updatedCardDTO.getBill() != null && !updatedCardDTO.getBill().equals(cardDatabase.get().getBill()) || 
+                updatedCardDTO.getCardNumber() != null && !updatedCardDTO.getCardNumber().equals(cardDatabase.get().getCardNumber()) ||
+                updatedCardDTO.getExpireDate() != null && !updatedCardDTO.getExpireDate().equals(cardDatabase.get().getExpireDate()) ||
+                updatedCardDTO.getCvv() != null && !updatedCardDTO.getCvv().equals(cardDatabase.get().getCvv()) ||
+                updatedCardDTO.getAccountId() != null && !updatedCardDTO.getAccountId().equals(cardDatabase.get().getAccount().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Card card = cardDatabase.get();
+
+        card.setHasCreditAccess(updatedCardDTO.isHasCreditAccess());
 
         return cardRepository.save(card);
     }

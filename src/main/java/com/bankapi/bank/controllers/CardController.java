@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,10 +33,22 @@ public class CardController {
         return cardService.findAllCards();
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Card findCardById(@PathVariable Long id) {
+        return cardService.findCardById(id);
+    }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Card createCard(@RequestBody CardDTO cardDTO) {
         return cardService.createCard(cardDTO);
+    }
+
+    @PatchMapping("/grantCreditAccess/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Card grantOrRemoveCreditAcess(@RequestBody CardDTO updatedCardDTO, @PathVariable Long id) {
+        return cardService.grantOrRemoveCreditAcess(updatedCardDTO, id);
     }
 
     @PutMapping("/{id}")
