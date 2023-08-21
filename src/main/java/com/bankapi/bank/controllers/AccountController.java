@@ -44,7 +44,7 @@ public class AccountController {
     public Account createAccount(@RequestBody AccountDTO accountDTO) {
         return accountService.createAccount(accountDTO);
     }
-
+    
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Account updateAccount(@RequestBody AccountDTO updatedAccountDTO, @PathVariable Long id) {
