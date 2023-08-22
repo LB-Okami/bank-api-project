@@ -51,9 +51,6 @@ public class CardService {
     public Card updateCard(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
-        Account accountById = accountService.findAccountById(updatedCardDTO.getAccountId());
-
-
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -63,17 +60,7 @@ public class CardService {
 
         Card card = cardDatabase.get();
 
-        card.setName(updatedCardDTO.getName());
-        card.setBrand(updatedCardDTO.getBrand());
-        card.setLevel(updatedCardDTO.getLevel());
-        card.setBill(updatedCardDTO.getBill());
-        card.setCardNumber(updatedCardDTO.getCardNumber());
-        card.setExpireDate(updatedCardDTO.getExpireDate());
-        card.setCvv(updatedCardDTO.getCvv());
-        card.setAccount(accountById);
-
-        card.setCreationDate(cardDatabase.get().getCreationDate());
-        card.setLastUpdate(LocalDateTime.now());
+        setCardAttributes(card, updatedCardDTO);
 
         return cardRepository.save(card);
     }
@@ -82,7 +69,6 @@ public class CardService {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
         Account accountById = accountService.findAccountById(updatedCardDTO.getAccountId());
-
 
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -94,19 +80,10 @@ public class CardService {
         debitTransactionFormula(cardDatabase.get().getAccount().getBalance(), updatedCardDTO.getValue());
 
         Card card = cardDatabase.get();
-        
-        card.setName(updatedCardDTO.getName());
-        card.setBrand(updatedCardDTO.getBrand());
-        card.setLevel(updatedCardDTO.getLevel());
-        card.setBill(updatedCardDTO.getBill());
-        card.setCardNumber(updatedCardDTO.getCardNumber());
-        card.setExpireDate(updatedCardDTO.getExpireDate());
-        card.setCvv(updatedCardDTO.getCvv());
-        card.setAccount(accountById);
 
-        card.setCreationDate(cardDatabase.get().getCreationDate());
-        card.setLastUpdate(LocalDateTime.now());
-
+        setCardAttributes(card, updatedCardDTO);
+        //Patch Create updateAccountBalance
+        accountService.updateAccount(null, id);
         return cardRepository.save(card);
     }
 
@@ -124,14 +101,7 @@ public class CardService {
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        else if(updatedCardDTO.getName() != null && updatedCardDTO.getName().equals(cardDatabase.get().getName()) || 
-                updatedCardDTO.getBrand() != null && !updatedCardDTO.getBrand().equals(cardDatabase.get().getBrand()) ||
-                updatedCardDTO.getLevel() != null && !updatedCardDTO.getBrand().equals(cardDatabase.get().getBrand()) ||
-                updatedCardDTO.getBill() != null && !updatedCardDTO.getBill().equals(cardDatabase.get().getBill()) || 
-                updatedCardDTO.getCardNumber() != null && !updatedCardDTO.getCardNumber().equals(cardDatabase.get().getCardNumber()) ||
-                updatedCardDTO.getExpireDate() != null && !updatedCardDTO.getExpireDate().equals(cardDatabase.get().getExpireDate()) ||
-                updatedCardDTO.getCvv() != null && !updatedCardDTO.getCvv().equals(cardDatabase.get().getCvv()) ||
-                updatedCardDTO.getAccountId() != null && !updatedCardDTO.getAccountId().equals(cardDatabase.get().getAccount().getId())) {
+        else if(checkIfCardWasAltered(cardDatabase.get(), updatedCardDTO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -140,6 +110,20 @@ public class CardService {
         card.setHasCreditAccess(updatedCardDTO.isHasCreditAccess());
 
         return cardRepository.save(card);
+    }
+
+    public boolean checkIfCardWasAltered(Card card, CardDTO updatedCardDTO) {
+        if(updatedCardDTO.getName() != null && updatedCardDTO.getName().equals(card.getName()) || 
+                updatedCardDTO.getBrand() != null && !updatedCardDTO.getBrand().equals(card.getBrand()) ||
+                updatedCardDTO.getLevel() != null && !updatedCardDTO.getBrand().equals(card.getBrand()) ||
+                updatedCardDTO.getBill() != null && !updatedCardDTO.getBill().equals(card.getBill()) || 
+                updatedCardDTO.getCardNumber() != null && !updatedCardDTO.getCardNumber().equals(card.getCardNumber()) ||
+                updatedCardDTO.getExpireDate() != null && !updatedCardDTO.getExpireDate().equals(card.getExpireDate()) ||
+                updatedCardDTO.getCvv() != null && !updatedCardDTO.getCvv().equals(card.getCvv()) ||
+                updatedCardDTO.getAccountId() != null && !updatedCardDTO.getAccountId().equals(card.getAccount().getId())) {
+                    return true;
+        }
+        return false;
     }
 
     public void checkIfAccountHasCard(Long id) {
@@ -162,8 +146,9 @@ public class CardService {
         card.setExpireDate(cardDTO.getExpireDate());
         card.setCvv(cardDTO.getCvv());
         card.setAccount(accountById);
-        
-        card.setCreationDate(LocalDate.now());
+        if(card.getCreationDate() == null) {
+            card.setCreationDate(LocalDate.now());
+        }
         card.setLastUpdate(LocalDateTime.now());
 
         return card;
