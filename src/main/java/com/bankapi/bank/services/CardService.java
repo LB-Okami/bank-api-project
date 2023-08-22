@@ -41,21 +41,9 @@ public class CardService {
     public Card createCard(CardDTO cardDTO) {
         Card card = new Card();
 
-        Account accountById = accountService.findAccountById(cardDTO.getAccountId());
-
         checkIfAccountHasCard(cardDTO.getAccountId());
         
-        card.setName(cardDTO.getName());
-        card.setBrand(cardDTO.getBrand());
-        card.setLevel(cardDTO.getLevel());
-        card.setBill(cardDTO.getBill());
-        card.setCardNumber(cardDTO.getCardNumber());
-        card.setExpireDate(cardDTO.getExpireDate());
-        card.setCvv(cardDTO.getCvv());
-        card.setAccount(accountById);
-        
-        card.setCreationDate(LocalDate.now());
-        card.setLastUpdate(LocalDateTime.now());
+        setCardAttributes(card, cardDTO);
 
         return cardRepository.save(card);
     }
@@ -160,6 +148,25 @@ public class CardService {
         if(accountById.getCard() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public Card setCardAttributes(Card card, CardDTO cardDTO) {
+
+        Account accountById = accountService.findAccountById(cardDTO.getAccountId());
+
+        card.setName(cardDTO.getName());
+        card.setBrand(cardDTO.getBrand());
+        card.setLevel(cardDTO.getLevel());
+        card.setBill(cardDTO.getBill());
+        card.setCardNumber(cardDTO.getCardNumber());
+        card.setExpireDate(cardDTO.getExpireDate());
+        card.setCvv(cardDTO.getCvv());
+        card.setAccount(accountById);
+        
+        card.setCreationDate(LocalDate.now());
+        card.setLastUpdate(LocalDateTime.now());
+
+        return card;
     }
 
     public void deleteCard(Long id) {
