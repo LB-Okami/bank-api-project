@@ -1,8 +1,9 @@
 package com.bankapi.bank.model;
 
 import com.bankapi.bank.enums.Operation;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,8 +28,8 @@ public class Report {
     @NotNull
     private Double value;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "card_id")
-    @JsonIgnoreProperties("report")
+    @JsonIgnore
     private Card card;
 }

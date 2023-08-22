@@ -9,8 +9,6 @@ public class AccountDTO {
 
     private Double balance;
     
-    private Double debt;
-    
     @NotNull
     private Long clientId;
 }

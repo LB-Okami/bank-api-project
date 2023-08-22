@@ -3,6 +3,8 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.bankapi.bank.enums.Brand;
 import com.bankapi.bank.enums.Level;
@@ -14,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -59,8 +62,6 @@ public class Card {
     @JsonIgnore
     private Account account;
 
-    //@OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    //@JsonIgnoreProperties("card")
-    //@JsonIgnore
-    //private List<Report> report;
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    private List<Report> reports = new ArrayList<>();
 }
