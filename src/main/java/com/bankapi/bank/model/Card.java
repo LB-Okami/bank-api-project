@@ -34,7 +34,7 @@ public class Card {
 
     private Level level;
 
-    private Double bill;
+    private Double bill = 0.0;
 
     private Double value;
 

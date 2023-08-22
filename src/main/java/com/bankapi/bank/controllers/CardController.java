@@ -63,6 +63,12 @@ public class CardController {
         return cardService.debitTransaction(updatedCardDTO, id);
     }
 
+    @PutMapping("/credit/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Card creditTransaction(@RequestBody CardDTO updatedCardDTO, @PathVariable Long id) {
+        return cardService.creditTransaction(updatedCardDTO, id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAccount(@PathVariable Long id) {

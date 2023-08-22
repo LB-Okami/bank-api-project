@@ -85,6 +85,31 @@ public class CardService {
         return cardRepository.save(card);
     }
 
+    public Card creditTransaction(CardDTO updatedCardDTO, Long id) {
+        Optional<Card> cardDatabase = cardRepository.findById(id);
+
+        if(!cardDatabase.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
+            checkIfAccountHasCard(updatedCardDTO.getAccountId());
+        }
+
+        Card card = cardDatabase.get();
+
+        Double oldCardBill =  card.getBill();
+
+        Double newCardBill;
+
+        setCardAttributes(card, updatedCardDTO);
+
+        newCardBill = creditTransactionFormula(oldCardBill, updatedCardDTO.getValue(), card.getAccount().getCreditLimit(), card.getAccount().getId());
+
+        card.setBill(newCardBill);
+
+        return cardRepository.save(card);
+    }
+
     public Card grantOrRemoveCreditAcess(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
@@ -134,8 +159,22 @@ public class CardService {
         if(value <= 0 || value > balance) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
+        
         return balance - value;
+    }
+
+    public Double creditTransactionFormula(Double bill, Double value, Double creditLimit, Long id) {
+        if(value <= 0 || value > creditLimit) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Double newCardBill = bill + value;
+
+        Double newAccountCreditLimit = creditLimit - value;
+
+        accountService.updateCreditLimit(newAccountCreditLimit, id);
+
+        return newCardBill;
     }
 
     public Double creditLimitFormula(Double balance) {

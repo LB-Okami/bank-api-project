@@ -12,8 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.AccountDTO;
-import com.bankapi.bank.model.Card;
-import com.bankapi.bank.model.CardDTO;
 import com.bankapi.bank.model.Client;
 import com.bankapi.bank.repositories.AccountRepository;
 
