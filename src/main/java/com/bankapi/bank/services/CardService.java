@@ -1,6 +1,5 @@
 package com.bankapi.bank.services;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,7 +67,6 @@ public class CardService {
     public Card debitTransaction(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
-
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -87,14 +85,6 @@ public class CardService {
         return cardRepository.save(card);
     }
 
-    public Double debitTransactionFormula(Double balance, Double value) {
-        if(value <= 0 || value > balance) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        return balance - value;
-    }
-
     public Card grantOrRemoveCreditAcess(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
@@ -107,7 +97,13 @@ public class CardService {
 
         Card card = cardDatabase.get();
 
+        Double newAccountCreditLimit = creditLimitFormula(card.getAccount().getBalance());
+
         card.setHasCreditAccess(updatedCardDTO.isHasCreditAccess());
+        
+        if(card.isHasCreditAccess()) {
+            accountService.updateCreditLimit(newAccountCreditLimit, card.getAccount().getId());
+        }
 
         return cardRepository.save(card);
     }
@@ -132,6 +128,27 @@ public class CardService {
         if(accountById.getCard() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public Double debitTransactionFormula(Double balance, Double value) {
+        if(value <= 0 || value > balance) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return balance - value;
+    }
+
+    public Double creditLimitFormula(Double balance) {
+        Double creditLimit;
+
+        if(balance < 2000) {
+            creditLimit = 1000.00;
+        }
+        else {
+            creditLimit = balance * 0.5;
+        }
+
+        return creditLimit;
     }
 
     public Card setCardAttributes(Card card, CardDTO cardDTO) {

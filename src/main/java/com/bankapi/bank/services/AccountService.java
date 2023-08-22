@@ -43,14 +43,9 @@ public class AccountService {
     public Account createAccount(AccountDTO accountDTO) {
         Account account = new Account();
 
-        Client clientById = clientService.findClientById(accountDTO.getClientId());
-
         checkIfClientHasAccount(accountDTO.getClientId());
 
-        account.setBalance(accountDTO.getBalance());
-        account.setCreationDate(LocalDate.now());
-        account.setLastUpdate(LocalDateTime.now());
-        account.setClient(clientById);
+        setAccountAttributes(account, accountDTO);
 
         return accountRepository.save(account);
     }
@@ -80,6 +75,21 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public Account setAccountAttributes(Account account, AccountDTO accountDTO) {
+
+        Client clientById = clientService.findClientById(accountDTO.getClientId());
+        
+        account.setBalance(accountDTO.getBalance());
+        account.setClient(clientById);
+
+        if(account.getCreationDate() == null) {
+            account.setCreationDate(LocalDate.now());
+        }
+        account.setLastUpdate(LocalDateTime.now());
+
+        return account;
+    }
+
     public Account updateAccountBalance(Double balance, Long id) {
         Optional<Account> accountDatabase = accountRepository.findById(id);
 
@@ -90,6 +100,20 @@ public class AccountService {
         Account account = accountDatabase.get();
 
         account.setBalance(balance);
+
+        return accountRepository.save(account);
+    }
+
+    public Account updateCreditLimit(Double creditLimit, Long id) {
+        Optional<Account> accountDatabase = accountRepository.findById(id);
+
+        if(!accountDatabase.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Account account = accountDatabase.get();
+
+        account.setCreditLimit(creditLimit);
 
         return accountRepository.save(account);
     }
