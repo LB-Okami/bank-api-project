@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class AccountDTO {
-    private double creditLimit;
+    private Double creditLimit;
 
     private Double balance;
     

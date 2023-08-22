@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.AccountDTO;
+import com.bankapi.bank.model.Card;
+import com.bankapi.bank.model.CardDTO;
 import com.bankapi.bank.model.Client;
 import com.bankapi.bank.repositories.AccountRepository;
 
@@ -74,6 +76,20 @@ public class AccountService {
 
         account.setCreationDate(accountDatabase.get().getCreationDate());
         account.setLastUpdate(LocalDateTime.now());
+
+        return accountRepository.save(account);
+    }
+
+    public Account updateAccountBalance(Double balance, Long id) {
+        Optional<Account> accountDatabase = accountRepository.findById(id);
+
+        if(!accountDatabase.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Account account = accountDatabase.get();
+
+        account.setBalance(balance);
 
         return accountRepository.save(account);
     }

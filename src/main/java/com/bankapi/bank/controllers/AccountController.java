@@ -47,12 +47,6 @@ public class AccountController {
     public Account createAccount(@RequestBody AccountDTO accountDTO) {
         return accountService.createAccount(accountDTO);
     }
-
-    //@PatchMapping("/updateAccountBalance/{id}")
-    //@ResponseStatus(HttpStatus.OK)
-    //public Account updateAccountBalance(@RequestBody AccountDTO updatedAccountDTO, @PathVariable Long id) {
-      //  return accountService.updateAccountBalance(updatedAccountDTO, id);
-    //}
     
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

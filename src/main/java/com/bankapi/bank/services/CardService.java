@@ -68,7 +68,6 @@ public class CardService {
     public Card debitTransaction(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
-        Account accountById = accountService.findAccountById(updatedCardDTO.getAccountId());
 
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -77,13 +76,14 @@ public class CardService {
             checkIfAccountHasCard(updatedCardDTO.getAccountId());
         }
 
-        debitTransactionFormula(cardDatabase.get().getAccount().getBalance(), updatedCardDTO.getValue());
+        Double newAccountBalance = debitTransactionFormula(cardDatabase.get().getAccount().getBalance(), updatedCardDTO.getValue());
 
         Card card = cardDatabase.get();
 
         setCardAttributes(card, updatedCardDTO);
-        //Patch Create updateAccountBalance
-        accountService.updateAccount(null, id);
+
+        accountService.updateAccountBalance(newAccountBalance, updatedCardDTO.getAccountId());
+
         return cardRepository.save(card);
     }
 
