@@ -51,9 +51,6 @@ public class AccountService {
     public Account updateAccount(AccountDTO updatedAccountDTO, Long id) {
         Optional<Account> accountDatabase = accountRepository.findById(id);
 
-        Client clientById = clientService.findClientById(updatedAccountDTO.getClientId());
-
-
         if(!accountDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -63,12 +60,7 @@ public class AccountService {
 
         Account account = accountDatabase.get();
 
-        account.setBalance(updatedAccountDTO.getBalance());
-        account.setCreditLimit(updatedAccountDTO.getCreditLimit());
-        account.setClient(clientById);
-
-        account.setCreationDate(accountDatabase.get().getCreationDate());
-        account.setLastUpdate(LocalDateTime.now());
+        setAccountAttributes(account, updatedAccountDTO);
 
         return accountRepository.save(account);
     }
@@ -78,6 +70,7 @@ public class AccountService {
         Client clientById = clientService.findClientById(accountDTO.getClientId());
         
         account.setBalance(accountDTO.getBalance());
+        account.setCreditLimit(accountDTO.getCreditLimit());
         account.setClient(clientById);
 
         if(account.getCreationDate() == null) {
