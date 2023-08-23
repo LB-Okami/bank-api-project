@@ -1,5 +1,8 @@
 package com.bankapi.bank.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.bankapi.bank.enums.Operation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +30,10 @@ public class Report {
 
     @NotNull
     private Double value;
+
+    private LocalDate creationDate;
+
+    private LocalDateTime lastUpdate;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "card_id")

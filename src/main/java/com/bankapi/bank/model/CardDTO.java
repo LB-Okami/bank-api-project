@@ -1,6 +1,5 @@
 package com.bankapi.bank.model;
 
-import java.math.BigDecimal;
 import java.time.YearMonth;
 
 import com.bankapi.bank.enums.Brand;

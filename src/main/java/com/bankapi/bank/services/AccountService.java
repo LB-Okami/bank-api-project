@@ -17,7 +17,6 @@ import com.bankapi.bank.repositories.AccountRepository;
 
 @Service
 public class AccountService {
-
     @Autowired
     private AccountRepository accountRepository;
 
