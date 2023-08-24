@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.bankapi.bank.enums.Operation;
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.Card;
 import com.bankapi.bank.model.CardDTO;
@@ -22,6 +23,9 @@ public class CardService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ReportService reportService;
 
     public List<Card> findAllCards() {
         return cardRepository.findAll();
@@ -65,7 +69,10 @@ public class CardService {
     }
 
     public Card debitTransaction(CardDTO updatedCardDTO, Long id) {
+
         Optional<Card> cardDatabase = cardRepository.findById(id);
+
+        Operation operationType = Operation.DEBIT;
 
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -82,14 +89,21 @@ public class CardService {
 
         accountService.updateAccountBalance(newAccountBalance, updatedCardDTO.getAccountId());
 
+        reportService.createReportFromCard(updatedCardDTO.getValue(), operationType, card);
+
         return cardRepository.save(card);
     }
 
     public Card creditTransaction(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
+        Operation operationType = Operation.CREDIT;
+
         if(!cardDatabase.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        else if(!cardDatabase.get().isHasCreditAccess()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
             checkIfAccountHasCard(updatedCardDTO.getAccountId());
@@ -106,6 +120,8 @@ public class CardService {
         newCardBill = creditTransactionFormula(oldCardBill, updatedCardDTO.getValue(), card.getAccount().getCreditLimit(), card.getAccount().getId());
 
         card.setBill(newCardBill);
+
+        reportService.createReportFromCard(updatedCardDTO.getValue(), operationType, card);
 
         return cardRepository.save(card);
     }
@@ -184,7 +200,7 @@ public class CardService {
             creditLimit = 1000.00;
         }
         else {
-            creditLimit = balance * 0.5;
+            creditLimit = balance * 0.02;
         }
 
         return creditLimit;
