@@ -3,6 +3,7 @@ package com.bankapi.bank.model;
 import java.time.YearMonth;
 
 import com.bankapi.bank.enums.Brand;
+import com.bankapi.bank.enums.CurrencyType;
 import com.bankapi.bank.enums.Level;
 
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,9 @@ public class CardDTO {
     private String name;
 
     private Brand brand;
+
+    @NotNull
+    private CurrencyType currencyType;
 
     private Level level;
 

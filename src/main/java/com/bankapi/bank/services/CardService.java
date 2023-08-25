@@ -27,7 +27,11 @@ public class CardService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private CurrencyTypeAPIService apiService;
+
     public List<Card> findAllCards() {
+        apiService.fetchAPIData();
         return cardRepository.findAll();
     }
 
