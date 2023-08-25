@@ -125,12 +125,11 @@ public class CardService {
 
         setCardAttributes(card, updatedCardDTO);
         
-        if(updatedCardDTO.getCurrencyType().equals(currencyType)) {
+        if(updatedCardDTO.getCurrencyType() != null && updatedCardDTO.getCurrencyType().equals(currencyType)) {
            updatedCardDTO.setValue(updatedCardDTO.getValue() * apiService.fetchAPIData());
         }
 
         newCardBill = creditTransactionFormula(oldCardBill, updatedCardDTO.getValue(), card.getAccount().getCreditLimit(), card.getAccount().getId());
-        
 
         card.setBill(newCardBill);
 
