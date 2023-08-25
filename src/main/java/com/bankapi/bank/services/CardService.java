@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.bankapi.bank.enums.CurrencyType;
 import com.bankapi.bank.enums.Operation;
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.Card;
@@ -101,6 +102,8 @@ public class CardService {
     public Card creditTransaction(CardDTO updatedCardDTO, Long id) {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
+        CurrencyType currencyType = CurrencyType.USD;
+
         Operation operationType = Operation.CREDIT;
 
         if(!cardDatabase.isPresent()) {
@@ -119,9 +122,15 @@ public class CardService {
 
         Double newCardBill;
 
+
         setCardAttributes(card, updatedCardDTO);
+        
+        if(updatedCardDTO.getCurrencyType().equals(currencyType)) {
+           updatedCardDTO.setValue(updatedCardDTO.getValue() * apiService.fetchAPIData());
+        }
 
         newCardBill = creditTransactionFormula(oldCardBill, updatedCardDTO.getValue(), card.getAccount().getCreditLimit(), card.getAccount().getId());
+        
 
         card.setBill(newCardBill);
 
@@ -172,6 +181,15 @@ public class CardService {
 
         if(accountById.getCard() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void checkCurrencyTypeAndUpdateValues(CardDTO cardDto, Card card) {
+        CurrencyType usdCurrency = CurrencyType.USD;
+
+        if(cardDto.getCurrencyType().equals(usdCurrency)) {
+           card.setValue(card.getValue() * apiService.fetchAPIData());
+           card.setBill(card.getBill() * apiService.fetchAPIData());  
         }
     }
 
