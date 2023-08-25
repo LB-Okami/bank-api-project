@@ -44,13 +44,7 @@ public class ClientService {
     }
 
     public Client createClient(Client client) {
-        Client clientByCpf = clientRepository.findByCpf(client.getCpf());
-        Client clientByEmail = clientRepository.findByEmail(client.getEmail());
-        Client clientByPhone = clientRepository.findByPhone(client.getPhone());
-
-        if(clientByCpf != null || clientByEmail != null || clientByPhone != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+        checkIfClientAlrealdyExists(client);
 
         client.setCreationDate(LocalDate.now());
         client.setLastUpdate(LocalDateTime.now());
@@ -85,6 +79,17 @@ public class ClientService {
         client.setLastUpdate(LocalDateTime.now());
 
         return clientRepository.save(client);
+    }
+
+    public void checkIfClientAlrealdyExists(Client client) {
+
+        Client clientByCpf = clientRepository.findByCpf(client.getCpf());
+        Client clientByEmail = clientRepository.findByEmail(client.getEmail());
+        Client clientByPhone = clientRepository.findByPhone(client.getPhone());
+
+        if(clientByCpf != null || clientByEmail != null || clientByPhone != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void deleteClient(Long id) {
