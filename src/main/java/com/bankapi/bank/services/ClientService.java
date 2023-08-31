@@ -27,7 +27,7 @@ public class ClientService {
         Optional<Client> clientById = clientRepository.findById(id);
 
         if(!clientById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client ID Not found");
         }
 
         return clientRepository.findById(id).get();
@@ -37,7 +37,7 @@ public class ClientService {
         Client clientByCpf = clientRepository.findByCpf(cpf);
 
         if(clientByCpf == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client CPF not found");
         }
 
         return clientRepository.findByCpf(cpf);
@@ -59,12 +59,12 @@ public class ClientService {
         Client clientByPhone = clientRepository.findByPhone(updatedClient.getPhone());
 
         if(!clientDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found");
         }
         else if(!updatedClient.getCpf().equals(clientDatabase.get().getCpf()) && clientByCpf != null ||
                 !updatedClient.getEmail().equals(clientDatabase.get().getEmail()) && clientByEmail != null 
                 || !updatedClient.getPhone().equals(clientDatabase.get().getPhone()) && clientByPhone != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF, Email or phone is alrealdy in use");
         }
 
         Client client = clientDatabase.get();
@@ -88,7 +88,7 @@ public class ClientService {
         Client clientByPhone = clientRepository.findByPhone(client.getPhone());
 
         if(clientByCpf != null || clientByEmail != null || clientByPhone != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF, Email or Phone is alrealdy in use");
         }
     }
 
@@ -96,7 +96,7 @@ public class ClientService {
         Optional<Client> clientById = clientRepository.findById(id);
 
         if(!clientById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client not found");
         }
 
         clientRepository.deleteById(id);
