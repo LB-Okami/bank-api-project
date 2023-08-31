@@ -31,7 +31,7 @@ public class AccountService {
         Optional<Account> accountById = accountRepository.findById(id);
 
         if(!accountById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account ID not found");
         }
 
         return accountRepository.findById(id).get();
@@ -51,7 +51,7 @@ public class AccountService {
         Optional<Account> accountDatabase = accountRepository.findById(id);
 
         if(!accountDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         }
         else if(!accountDatabase.get().getClient().getId().equals(updatedAccountDTO.getClientId())) {
             checkIfClientHasAccount(updatedAccountDTO.getClientId());
@@ -84,7 +84,7 @@ public class AccountService {
         Optional<Account> accountDatabase = accountRepository.findById(id);
 
         if(!accountDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         }
 
         Account account = accountDatabase.get();
@@ -98,7 +98,7 @@ public class AccountService {
         Optional<Account> accountDatabase = accountRepository.findById(id);
 
         if(!accountDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         }
 
         Account account = accountDatabase.get();
@@ -112,7 +112,7 @@ public class AccountService {
         Client clientById = clientService.findClientById(id);
 
         if(clientById.getAccount() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This client alrealdy has an account");
         }
     }
 
@@ -120,7 +120,7 @@ public class AccountService {
         Optional<Account> accountById = accountRepository.findById(id);
 
         if(!accountById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account not found");
         }
 
         accountRepository.deleteById(id);
