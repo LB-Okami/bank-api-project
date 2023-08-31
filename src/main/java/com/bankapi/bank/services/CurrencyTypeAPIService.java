@@ -16,7 +16,7 @@ public class CurrencyTypeAPIService {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(apiUrl, String.class);
 
          if(responseEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "API response not found");
         }
 
         String jsonResponse = responseEntity.getBody();
