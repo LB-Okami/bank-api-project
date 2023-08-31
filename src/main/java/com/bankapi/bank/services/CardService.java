@@ -32,7 +32,6 @@ public class CardService {
     private CurrencyTypeAPIService apiService;
 
     public List<Card> findAllCards() {
-        apiService.fetchAPIData();
         return cardRepository.findAll();
     }
 
@@ -40,7 +39,7 @@ public class CardService {
         Optional<Card> cardById = cardRepository.findById(id);
 
         if(!cardById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card ID not found");
         }
 
         return cardRepository.findById(id).get();
@@ -60,7 +59,7 @@ public class CardService {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
         if(!cardDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found");
         }
         else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
             checkIfAccountHasCard(updatedCardDTO.getAccountId());
@@ -80,7 +79,7 @@ public class CardService {
         Operation operationType = Operation.DEBIT;
 
         if(!cardDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found");
         }
         else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
             checkIfAccountHasCard(updatedCardDTO.getAccountId());
@@ -107,10 +106,10 @@ public class CardService {
         Operation operationType = Operation.CREDIT;
 
         if(!cardDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found");
         }
         else if(!cardDatabase.get().isHasCreditAccess()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card does not have credit access");
         }
         else if(!cardDatabase.get().getAccount().getId().equals(updatedCardDTO.getAccountId())) {
             checkIfAccountHasCard(updatedCardDTO.getAccountId());
@@ -142,10 +141,10 @@ public class CardService {
         Optional<Card> cardDatabase = cardRepository.findById(id);
 
         if(!cardDatabase.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found");
         }
         else if(checkIfCardWasAltered(cardDatabase.get(), updatedCardDTO)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot alter card attributes");
         }
 
         Card card = cardDatabase.get();
@@ -179,7 +178,7 @@ public class CardService {
         Account accountById = accountService.findAccountById(id);
 
         if(accountById.getCard() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account alrealdy has a card");
         }
     }
 
@@ -194,7 +193,7 @@ public class CardService {
 
     public Double debitTransactionFormula(Double balance, Double value) {
         if(value <= 0 || value > balance) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value is negative or balance is not enough");
         }
         
         return balance - value;
@@ -202,7 +201,7 @@ public class CardService {
 
     public Double creditTransactionFormula(Double bill, Double value, Double creditLimit, Long id) {
         if(value <= 0 || value > creditLimit) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value is negative or credit limit is not enough");
         }
 
         Double newCardBill = bill + value;
@@ -251,7 +250,7 @@ public class CardService {
         Optional<Card> cardById = cardRepository.findById(id);
 
         if(!cardById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card not found");
         }
 
         cardRepository.deleteById(id);
