@@ -28,7 +28,7 @@ public class ReportService {
         Optional<Report> reportById = reportRepository.findById(id);
 
         if(!reportById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Report ID not found");
         }
 
         return reportRepository.findById(id).get();
@@ -60,7 +60,7 @@ public class ReportService {
         Optional<Report> reportById = reportRepository.findById(id);
 
         if(!reportById.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Report not found");
         }
 
         reportRepository.deleteById(id);
