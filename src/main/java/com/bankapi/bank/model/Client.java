@@ -3,6 +3,8 @@ package com.bankapi.bank.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
@@ -21,20 +26,21 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Nome é obrigatório")
     private String name;
 
-    //fazer validação de cpf
-    @NotNull
+    @CPF(message = "Insira um CPF válido")
     private String cpf;
 
-    @NotNull
+    @Email(message = "Insira um email válido")
     private String email;
     
-    @NotNull
+    @NotBlank(message = "Número de telefone é obrigatório")
+    @Min(10)
+    @Max(11)
     private String phone;
 
-    @NotNull
+    @NotBlank(message = "Endereço é obrigatório")
     private String address;
 
     private LocalDate creationDate;

@@ -16,6 +16,7 @@ import com.bankapi.bank.model.Client;
 import com.bankapi.bank.services.ClientService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,13 +52,13 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Client createClient(@RequestBody Client client) {
+    public Client createClient(@RequestBody @Valid Client client) {
         return clientService.createClient(client);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Client updateClient(@RequestBody Client updatedClient, @PathVariable Long id) {
+    public Client updateClient(@RequestBody @Valid Client updatedClient, @PathVariable Long id) {
         return clientService.updateClient(updatedClient, id);
     }
 
