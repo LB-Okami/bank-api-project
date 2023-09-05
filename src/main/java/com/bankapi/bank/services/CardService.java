@@ -161,14 +161,14 @@ public class CardService {
     }
 
     public boolean checkIfCardWasAltered(Card card, CardDTO updatedCardDTO) {
-        if(updatedCardDTO.getName() != null && updatedCardDTO.getName().equals(card.getName()) || 
-                updatedCardDTO.getBrand() != null && !updatedCardDTO.getBrand().equals(card.getBrand()) ||
-                updatedCardDTO.getLevel() != null && !updatedCardDTO.getBrand().equals(card.getBrand()) ||
-                updatedCardDTO.getBill() != null && !updatedCardDTO.getBill().equals(card.getBill()) || 
-                updatedCardDTO.getCardNumber() != null && !updatedCardDTO.getCardNumber().equals(card.getCardNumber()) ||
-                updatedCardDTO.getExpireDate() != null && !updatedCardDTO.getExpireDate().equals(card.getExpireDate()) ||
-                updatedCardDTO.getCvv() != null && !updatedCardDTO.getCvv().equals(card.getCvv()) ||
-                updatedCardDTO.getAccountId() != null && !updatedCardDTO.getAccountId().equals(card.getAccount().getId())) {
+        if(updatedCardDTO.getName().equals(card.getName()) || 
+                !updatedCardDTO.getBrand().equals(card.getBrand()) ||
+                !updatedCardDTO.getLevel().equals(card.getLevel()) ||
+                !updatedCardDTO.getBill().equals(card.getBill()) || 
+                !updatedCardDTO.getCardNumber().equals(card.getCardNumber()) ||
+                !updatedCardDTO.getExpireDate().equals(card.getExpireDate()) ||
+                !updatedCardDTO.getCvv().equals(card.getCvv()) ||
+                !updatedCardDTO.getAccountId().equals(card.getAccount().getId())) {
                     return true;
         }
         return false;

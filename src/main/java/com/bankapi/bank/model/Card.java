@@ -19,6 +19,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -31,23 +34,32 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 5, max = 100)
     private String name;
 
+    @NotNull
     private Brand brand;
 
+    @NotNull
     private Level level;
 
+    @NotBlank
+    @Min(0)
     private Double bill = 0.0;
 
+    @Min(0)
     private Double value;
 
     //Fazer validações de bandeira
+    @NotBlank
     @Size(min = 16, max = 16)
     private String cardNumber;
 
     @NotNull
     private YearMonth expireDate;
 
+    @NotBlank
     @Size(min = 3, max = 3)
     private String cvv;
 
