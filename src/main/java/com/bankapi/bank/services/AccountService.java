@@ -17,11 +17,16 @@ import com.bankapi.bank.repositories.AccountRepository;
 
 @Service
 public class AccountService {
-    @Autowired
-    private AccountRepository accountRepository;
+
+    private final AccountRepository accountRepository;
+
+    private final ClientService clientService;
 
     @Autowired
-    private ClientService clientService;
+    public AccountService(AccountRepository accountRepository, ClientService clientService) {
+        this.accountRepository = accountRepository;
+        this.clientService = clientService;
+    }
 
     public List<Account> findAllAccounts() {
         return accountRepository.findAll();

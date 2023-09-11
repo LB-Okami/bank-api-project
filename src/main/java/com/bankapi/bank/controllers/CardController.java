@@ -24,8 +24,11 @@ import com.bankapi.bank.services.CardService;
 @RequestMapping("/cards")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CardController {
-    @Autowired
-    private CardService cardService;
+    private final CardService cardService;
+
+    public CardController(CardService cardService) {
+        this.cardService = cardService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

@@ -19,17 +19,21 @@ import com.bankapi.bank.repositories.CardRepository;
 
 @Service
 public class CardService {
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
+
+    private final AccountService accountService;
+
+    private final ReportService reportService;
+
+    private final CurrencyTypeAPIService apiService;
 
     @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private ReportService reportService;
-
-    @Autowired
-    private CurrencyTypeAPIService apiService;
+    public CardService(CardRepository cardRepository, AccountService accountService, ReportService reportService, CurrencyTypeAPIService apiService) {
+        this.cardRepository = cardRepository;
+        this.accountService = accountService;
+        this.reportService = reportService;
+        this.apiService = apiService;
+    }
 
     public List<Card> findAllCards() {
         return cardRepository.findAll();
