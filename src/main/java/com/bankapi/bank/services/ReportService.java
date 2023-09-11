@@ -17,8 +17,12 @@ import com.bankapi.bank.repositories.ReportRepository;
 
 @Service
 public class ReportService {
+    private final ReportRepository reportRepository;
+
     @Autowired
-    private ReportRepository reportRepository;
+    public ReportService(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
 
     public List<Report> findAllReports() {
         return reportRepository.findAll();

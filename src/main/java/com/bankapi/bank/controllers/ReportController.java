@@ -19,8 +19,12 @@ import com.bankapi.bank.services.ReportService;
 @RequestMapping("/reports")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReportController {
+    private final ReportService reportService;
+
     @Autowired
-    private ReportService reportService;
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
