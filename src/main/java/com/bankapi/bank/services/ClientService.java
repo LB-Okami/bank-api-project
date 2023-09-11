@@ -16,8 +16,12 @@ import com.bankapi.bank.repositories.ClientRepository;
 @Service
 public class ClientService {
     
+    private final ClientRepository clientRepository;
+
     @Autowired
-    private ClientRepository clientRepository;
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     public List<Client> findAllClients() {
         return clientRepository.findAll();

@@ -28,9 +28,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "bank Api")
 public class ClientController {
+    
+    private final ClientService clientService;
 
     @Autowired
-    private ClientService clientService;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
