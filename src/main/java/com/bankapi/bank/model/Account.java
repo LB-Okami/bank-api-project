@@ -33,6 +33,10 @@ public class Account {
     @Min(0)
     private Double balance;
 
+    @NotBlank
+    @Min(0)
+    private Double milesPoints = 0.0;
+
     private LocalDate creationDate;
 
     private LocalDateTime lastUpdate;

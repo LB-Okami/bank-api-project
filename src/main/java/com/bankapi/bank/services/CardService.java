@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bankapi.bank.enums.CurrencyType;
+import com.bankapi.bank.enums.Level;
 import com.bankapi.bank.enums.Operation;
 import com.bankapi.bank.model.Account;
 import com.bankapi.bank.model.Card;
 import com.bankapi.bank.model.CardDTO;
 import com.bankapi.bank.repositories.CardRepository;
+
+import lombok.val;
 
 @Service
 public class CardService {
@@ -33,6 +36,7 @@ public class CardService {
         this.accountService = accountService;
         this.reportService = reportService;
         this.apiService = apiService;
+    
     }
 
     public List<Card> findAllCards() {
@@ -125,7 +129,6 @@ public class CardService {
 
         Double newCardBill;
 
-
         setCardAttributes(card, updatedCardDTO);
         
         if(updatedCardDTO.getCurrencyType() != null && updatedCardDTO.getCurrencyType().equals(currencyType)) {
@@ -135,6 +138,8 @@ public class CardService {
         newCardBill = creditTransactionFormula(oldCardBill, updatedCardDTO.getValue(), card.getAccount().getCreditLimit(), card.getAccount().getId());
 
         card.setBill(newCardBill);
+
+        milesPointsFormula(updatedCardDTO.getValue(), card.getAccount().getMilesPoints(), card.getLevel().toString());
 
         reportService.createReportFromCard(updatedCardDTO.getValue(), operationType, card);
 
@@ -215,6 +220,16 @@ public class CardService {
         accountService.updateCreditLimit(newAccountCreditLimit, id);
 
         return newCardBill;
+    }
+
+    public Double milesPointsFormula(Double value, Double milesPoints, String cardLevel) {
+        Level level = Level.valueOf(cardLevel);
+
+        if(level == Level.GOLD && value >= 0.5) {
+            return 0.0;
+        }
+
+        return milesPoints;
     }
 
     public Double creditLimitFormula(Double balance) {

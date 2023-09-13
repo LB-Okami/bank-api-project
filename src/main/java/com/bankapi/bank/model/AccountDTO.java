@@ -7,5 +7,7 @@ public class AccountDTO {
 
     private Double balance;
 
+    private Double milesPoints;
+
     private Long clientId;
 }
